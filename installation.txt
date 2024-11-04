@@ -1,0 +1,19 @@
+	docker build -t osanhu/department-ser:0.0.1 .
+	docker run -d -p 8081:8081 --network=eurekanet1 -e EUREKA_SERVER_ADDRESS=http://host.docker.internal:8761/eureka/ -e server.address=localhost --name department-ser 79ebe4c7471a
+	
+docker run -d -p 8761:8761 --name servicereg 6158d3b94d5d
+docker run -d -p 8081:8081 -e EUREKA_SERVER_ADDRESS=http://host.docker.internal:8761/eureka/ -e server.1=localhost --name department-ser b4369ac9cdae
+
+
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    ip-address: ${server.1}
+    instance-id: ${server.1}:${server.port}
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: ${EUREKA_SERVER_ADDRESS:http://localhost:8761/eureka}
+
